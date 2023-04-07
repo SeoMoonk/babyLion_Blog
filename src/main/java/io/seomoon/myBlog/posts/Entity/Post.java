@@ -27,25 +27,30 @@ public class Post {
     private String body;
 
     //언제 썼는지
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     //언제 수정되었는지
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 
     //누가 썼는지
 
 
-    public static Post createPost(String title, String body, LocalDateTime createdAt, LocalDateTime updatedAt)
+    public static Post createPost(String title, String body)
     {
         Post post = new Post();
 
         post.title = title;
         post.body = body;
 
-        post.createdAt = createdAt;
-        post.updatedAt = updatedAt;
-
         return post;
+    }
+
+    public void updatePost(String title, String body)
+    {
+        this.title = title;
+        this.body = body;
+
+        this.updatedAt = LocalDateTime.now();
     }
 
 
