@@ -1,25 +1,3 @@
-server:
-  port: 8083
-
-
 spring:
-
-  config:
-    activate:
-      on-profile: local
-
-
-  datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3306/baby_Lion_blog?useUnicode=true&characterEncoding=utf8&autoReconnect=true&serverTimezone=Asia/Seoul
-    username: baby
-    password: lion
-
-  jpa:
-    hibernate:
-      ddl-auto: create
-    properties:
-      hibernate:
-        show_sql: true
-        format_sql: true
-        open-in-view: true
+  profiles:
+    default: local

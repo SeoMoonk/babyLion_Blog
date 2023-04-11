@@ -4,27 +4,29 @@ import io.seomoon.myBlog.posts.Entity.Post;
 import io.seomoon.myBlog.posts.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RequiredArgsConstructor
+@RequestMapping("/posts")
 @Controller
 public class PostController {
 
     private final PostService postService;
 
-    //포스트 조회
-    //http://localhost:8083/
-    @GetMapping("/posts/get/{id}")
-    public String getPost(@PathVariable(name = "id") Long id) {
+    @PostMapping("/list")
+    @ResponseBody
+    public List<Post> getPostList() {
+        List<Post> postList = postService.findAll();
 
-        Post getById = postService.getById(id);
-
-        return "얻어온 포스트 : " + getById.toString();
+        return postList;
     }
 
-    @GetMapping("/posts/write")
+    //http://localhost:8083/
+
+    @GetMapping("/write")
     public String getPostWriteView() {
 
         //thymeleaf 템플릿엔진의 prefix 값이 template 로 default 설정되어 있기 떄문에
@@ -32,10 +34,37 @@ public class PostController {
         return "/posts/post_write";
     }
 
-    @PostMapping("/posts/write")
+    @PostMapping("/write")
     public String writePost(@PathVariable(name="title") String title, @PathVariable(name="body") String body) {
 
-        return "제목 : " + title + "내용 : " + body ;
+        System.out.println("title = " + title);
+        System.out.println("body = " + body);
+
+        Long saveId = postService.save(title, body);
+
+        System.out.println("saveId = " + saveId);
+
+        // HTTP
+        // Status Code
+        // 2xx -> 성공했을 때, 문제 없을 때
+        // 3xx -> 페이지가 이동되었을 때, 바뀌었을 때 (redirect 등 ... )
+        // 4xx -> 요청 보낸 사람이 잘못 보냈을 경우
+        // 5xx -> 서버에서 무언가 문제가 발생했을 경우
+
+
+        return "redirect:/";
+        // classpath:/te,plates/redirect:/    .html
+    }
+
+    // 1.URL 에서의 번호로서 포스트를 조회 -> PathVariable
+    @GetMapping("/{id}")
+    public String getPostById(@PathVariable(name="id") Long id, Model model) {
+
+        Post findPost = postService.getById(id);
+
+        model.addAttribute("post",findPost);    //Map<String, Object>
+
+        return "/posts/post_detail";        //FIXME : 반환값 고치기
     }
 
 }
